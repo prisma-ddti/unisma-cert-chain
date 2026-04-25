@@ -130,7 +130,7 @@ Settings > Privacy & Security > Certificates
 File `.pem` sudah tersedia di repository ini. Script hanya diperlukan jika certificate chain berubah dan file perlu dibuat ulang.
 
 ```bash
-./generate-library-cacert.sh
+./generate.sh
 ```
 
 ## Catatan
