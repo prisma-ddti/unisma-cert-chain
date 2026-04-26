@@ -3,6 +3,7 @@ set -euo pipefail
 
 DOMAIN="${1:-unisma.ac.id}"
 OUT="cacert-unisma.ac.id.pem"
+CHROMIUM_OUT="cacert-unisma.ac.id.chromium.pem"
 TMPDIR="$(mktemp -d)"
 
 cleanup() {
@@ -60,6 +61,8 @@ if ! openssl x509 -inform DER -in "$TMPDIR/intermediate.crt" -out "$TMPDIR/inter
 	openssl x509 -in "$TMPDIR/intermediate.crt" -out "$TMPDIR/intermediate.pem"
 fi
 
+cp "$TMPDIR/intermediate.pem" "$CHROMIUM_OUT"
+
 {
 	cat "$TMPDIR/intermediate.pem"
 	printf '\n'
@@ -67,6 +70,7 @@ fi
 } > "$OUT"
 
 chmod 0644 "$OUT"
+chmod 0644 "$CHROMIUM_OUT"
 
 echo "Verifying CA bundle with openssl..."
 openssl verify -CAfile "$OUT" "$TMPDIR/leaf.pem" >/dev/null
@@ -91,4 +95,5 @@ fi
 echo "OpenSSL live TLS verification: OK"
 
 echo "Successfully created $OUT"
-echo "This file can be used for unisma.ac.id and subdomains that use the same Sectigo/USERTrust chain."
+echo "Successfully created $CHROMIUM_OUT"
+echo "These files can be used for unisma.ac.id and subdomains that use the same Sectigo/USERTrust chain."
